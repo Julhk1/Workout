@@ -62,42 +62,33 @@ header p {
     box-shadow: 0 15px 30px rgba(255, 71, 87, 0.3);
 }
 
-/* Fonds dégradés rouges sur les cartes (comme ta maquette) */
+/* Configuration pour charger TES images locales de GitHub */
 .card-image {
     height: 280px;
-    background: radial-gradient(circle, #8b1e26 0%, #1a0507 100%);
+    background-color: #1a0507;
     position: relative;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.3s;
 }
 
-/* Icônes de profil sans visage */
 .homme-anim {
-    background-image: url('https://cdn-icons-png.flaticon.com/512/2548/2548537.png');
-    background-size: 65%;
-    background-repeat: no-repeat;
+    background-image: url('homme.png');
+    background-size: cover;
     background-position: center;
 }
 
 .femme-anim {
-    background-image: url('https://cdn-icons-png.flaticon.com/512/2548/2548532.png');
-    background-size: 65%;
-    background-repeat: no-repeat;
+    background-image: url('femme.png');
+    background-size: cover;
     background-position: center;
 }
 
 .senior-anim {
-    background-image: url('https://cdn-icons-png.flaticon.com/512/3048/3048374.png');
-    background-size: 65%;
-    background-repeat: no-repeat;
+    background-image: url('senior.png');
+    background-size: cover;
     background-position: center;
-}
-
-.card:hover .card-image {
-    background: radial-gradient(circle, #b32631 0%, #1a0507 100%);
 }
 
 .card-content {
@@ -143,7 +134,7 @@ header p {
     transform: scale(1.05);
 }
 
-/* La section d'aperçu des exercices du bas */
+/* Section d'aperçu des exercices */
 .preview-section {
     margin-top: 40px;
     border-top: 1px solid #2f3542;
@@ -172,7 +163,7 @@ header p {
     width: 55px;
     height: 55px;
     object-fit: contain;
-    filter: invert(1); /* Rend l'icône blanche */
+    filter: invert(1); /* Rend les icônes blanches pour le fond sombre */
     margin-bottom: 10px;
 }
 
@@ -220,7 +211,7 @@ header p {
     border-radius: 50%;
 }
 
-/* Logique des animations CSS */
+/* Effets visuels des pulsations pendant l'effort */
 .pushup-anim { animation: moveUpAndDown 1.8s infinite ease-in-out; background: #1e90ff; }
 .squat-anim { animation: moveUpAndDown 1.4s infinite ease-in-out; background: #2ed573; }
 .plank-anim { animation: pulseGlow 2s infinite; background: #7158e2; }
