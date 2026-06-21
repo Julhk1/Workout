@@ -17,38 +17,16 @@ const belts = [
   { name: "BLACK", min: 500 }
 ];
 
-const t = {
-  fr: {
-    title: "🥋 Fitness Belt",
-    done: "Terminé"
-  },
-  en: {
-    title: "🥋 Fitness Belt",
-    done: "Done"
-  },
-  ar: {
-    title: "حزام اللياقة 🥋",
-    done: "انتهيت"
-  }
-};
-
-function setLang(l) {
-  lang = l;
-  document.getElementById("title").innerText = t[lang].title;
-  update();
-}
-
 function workout(min) {
   data.minutes += min;
-  update();
   save();
+  update();
 }
 
 function finishWorkout() {
   data.workouts++;
 
   let today = new Date().toDateString();
-
   if (data.lastDay !== today) {
     data.streak++;
     data.lastDay = today;
@@ -59,15 +37,11 @@ function finishWorkout() {
 }
 
 function getBelt() {
-  let b = belts[0];
-
-  for (let i = 0; i < belts.length; i++) {
-    if (data.minutes >= belts[i].min) {
-      b = belts[i];
-    }
+  let current = belts[0];
+  for (let b of belts) {
+    if (data.minutes >= b.min) current = b;
   }
-
-  return b;
+  return current;
 }
 
 function update() {
@@ -82,7 +56,7 @@ function update() {
     progress + "%";
 
   document.getElementById("stats").innerText =
-    `🔥 ${data.workouts} workouts | ⏱ ${data.minutes} min | 🔥 streak ${data.streak}`;
+    `${data.workouts} workouts • ${data.minutes} min • 🔥 ${data.streak} streak`;
 }
 
 function save() {
@@ -97,32 +71,48 @@ function load() {
 load();
 update();
 
+/* -------- CARD (TIKTOK STYLE) -------- */
+
 function generateCard() {
   const c = document.getElementById("card");
   const ctx = c.getContext("2d");
 
   let belt = getBelt();
 
-  ctx.fillStyle = "#0f0f0f";
+  // background gradient
+  const grad = ctx.createLinearGradient(0,0,1080,1080);
+  grad.addColorStop(0, "#0a0a0a");
+  grad.addColorStop(1, "#1a1a1a");
+
+  ctx.fillStyle = grad;
   ctx.fillRect(0,0,1080,1080);
 
+  // title
   ctx.fillStyle = "white";
-  ctx.font = "bold 60px Arial";
-  ctx.fillText("FITNESS BELT", 300, 150);
+  ctx.font = "bold 70px Arial";
+  ctx.fillText("FITNESS BELT", 250, 200);
 
-  ctx.font = "bold 80px Arial";
-  ctx.fillText(belt.name + " BELT", 300, 300);
+  // belt
+  ctx.font = "bold 100px Arial";
+  ctx.fillText(belt.name + " BELT", 250, 350);
 
-  ctx.font = "40px Arial";
-  ctx.fillText("Workouts: " + data.workouts, 300, 450);
-  ctx.fillText("Minutes: " + data.minutes, 300, 520);
-  ctx.fillText("Streak: " + data.streak, 300, 590);
+  // stats
+  ctx.font = "50px Arial";
+  ctx.fillText(`Workouts: ${data.workouts}`, 250, 500);
+  ctx.fillText(`Minutes: ${data.minutes}`, 250, 580);
+  ctx.fillText(`Streak: ${data.streak}`, 250, 660);
 
-  ctx.fillStyle = "orange";
-  ctx.fillRect(300, 700, 500, 40);
+  // bar
+  ctx.fillStyle = "#333";
+  ctx.fillRect(250, 750, 600, 30);
 
+  ctx.fillStyle = "#ff8c00";
+  ctx.fillRect(250, 750, 400, 30);
+
+  // quote
   ctx.fillStyle = "white";
-  ctx.fillText("DISCIPLINE WINS", 320, 850);
+  ctx.font = "italic 50px Arial";
+  ctx.fillText("DISCIPLINE BUILDS IDENTITY", 200, 900);
 }
 
 function downloadCard() {
