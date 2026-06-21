@@ -1,124 +1,119 @@
-let lang = "fr";
+let profile = localStorage.getItem("profile");
 
-let data = {
-  workouts: 0,
-  minutes: 0,
-  streak: 0,
-  lastDay: null
-};
+function selectProfile(p) {
+  profile = p;
+  localStorage.setItem("profile", p);
+  window.location.href = "workout.html";
+}
 
-const belts = [
-  { name: "WHITE", min: 0 },
-  { name: "YELLOW", min: 30 },
-  { name: "ORANGE", min: 60 },
-  { name: "BLUE", min: 120 },
-  { name: "PURPLE", min: 200 },
-  { name: "BROWN", min: 300 },
-  { name: "BLACK", min: 500 }
-];
+/* ------------------ WORKOUT ------------------ */
 
-function workout(min) {
-  data.minutes += min;
-  save();
-  update();
+let exercises = [];
+let current = 0;
+let globalTime = 0;
+let exerciseTime = 0;
+let interval;
+
+function startWorkout(min) {
+
+  document.querySelector(".buttons").style.display = "none";
+  document.getElementById("workoutBox").style.display = "block";
+
+  globalTime = min * 60;
+
+  if (profile === "male") {
+    exercises = [
+      { name: "Squats", time: 30 },
+      { name: "Push-ups", time: 30 },
+      { name: "Plank", time: 30 },
+      { name: "Jumping Jacks", time: 30 }
+    ];
+  }
+
+  if (profile === "female") {
+    exercises = [
+      { name: "Squats", time: 30 },
+      { name: "Glute Bridge", time: 30 },
+      { name: "Abs Crunch", time: 30 },
+      { name: "Stretching", time: 30 }
+    ];
+  }
+
+  if (profile === "senior") {
+    exercises = [
+      { name: "Walking in place", time: 40 },
+      { name: "Arm circles", time: 40 },
+      { name: "Gentle squats", time: 40 }
+    ];
+  }
+
+  current = 0;
+  runTimers();
+}
+
+function runTimers() {
+
+  clearInterval(interval);
+
+  interval = setInterval(() => {
+
+    globalTime--;
+    exerciseTime--;
+
+    if (exerciseTime <= 0) {
+      nextExercise();
+    }
+
+    if (globalTime <= 0) {
+      finishWorkout();
+    }
+
+    updateUI();
+
+  }, 1000);
+
+  loadExercise();
+}
+
+function loadExercise() {
+  if (!exercises[current]) return;
+
+  document.getElementById("exerciseName").innerText =
+    "🏋️ " + exercises[current].name;
+
+  exerciseTime = exercises[current].time;
+}
+
+function nextExercise() {
+  current++;
+
+  if (current >= exercises.length) {
+    finishWorkout();
+    return;
+  }
+
+  loadExercise();
+}
+
+function updateUI() {
+  document.getElementById("globalTimer").innerText =
+    format(globalTime);
+
+  document.getElementById("exerciseTimer").innerText =
+    format(exerciseTime);
+}
+
+function format(s) {
+  let m = Math.floor(s / 60);
+  let sec = s % 60;
+  return `${m}:${sec < 10 ? "0" : ""}${sec}`;
 }
 
 function finishWorkout() {
-  data.workouts++;
+  clearInterval(interval);
 
-  let today = new Date().toDateString();
-  if (data.lastDay !== today) {
-    data.streak++;
-    data.lastDay = today;
-  }
+  document.getElementById("workoutBox").style.display = "none";
+  document.getElementById("finish").style.display = "block";
 
-  save();
-  update();
-}
-
-function getBelt() {
-  let current = belts[0];
-  for (let b of belts) {
-    if (data.minutes >= b.min) current = b;
-  }
-  return current;
-}
-
-function update() {
-  let belt = getBelt();
-
-  document.getElementById("belt").innerText =
-    "🥋 " + belt.name + " BELT";
-
-  let progress = (data.minutes % 100);
-
-  document.getElementById("progress").style.width =
-    progress + "%";
-
-  document.getElementById("stats").innerText =
-    `${data.workouts} workouts • ${data.minutes} min • 🔥 ${data.streak} streak`;
-}
-
-function save() {
-  localStorage.setItem("fitness", JSON.stringify(data));
-}
-
-function load() {
-  let d = localStorage.getItem("fitness");
-  if (d) data = JSON.parse(d);
-}
-
-load();
-update();
-
-/* -------- CARD (TIKTOK STYLE) -------- */
-
-function generateCard() {
-  const c = document.getElementById("card");
-  const ctx = c.getContext("2d");
-
-  let belt = getBelt();
-
-  // background gradient
-  const grad = ctx.createLinearGradient(0,0,1080,1080);
-  grad.addColorStop(0, "#0a0a0a");
-  grad.addColorStop(1, "#1a1a1a");
-
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,1080,1080);
-
-  // title
-  ctx.fillStyle = "white";
-  ctx.font = "bold 70px Arial";
-  ctx.fillText("FITNESS BELT", 250, 200);
-
-  // belt
-  ctx.font = "bold 100px Arial";
-  ctx.fillText(belt.name + " BELT", 250, 350);
-
-  // stats
-  ctx.font = "50px Arial";
-  ctx.fillText(`Workouts: ${data.workouts}`, 250, 500);
-  ctx.fillText(`Minutes: ${data.minutes}`, 250, 580);
-  ctx.fillText(`Streak: ${data.streak}`, 250, 660);
-
-  // bar
-  ctx.fillStyle = "#333";
-  ctx.fillRect(250, 750, 600, 30);
-
-  ctx.fillStyle = "#ff8c00";
-  ctx.fillRect(250, 750, 400, 30);
-
-  // quote
-  ctx.fillStyle = "white";
-  ctx.font = "italic 50px Arial";
-  ctx.fillText("DISCIPLINE BUILDS IDENTITY", 200, 900);
-}
-
-function downloadCard() {
-  const c = document.getElementById("card");
-  const a = document.createElement("a");
-  a.href = c.toDataURL();
-  a.download = "fitness-card.png";
-  a.click();
+  localStorage.setItem("lastWorkout", Date.now());
 }
