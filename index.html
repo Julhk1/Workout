@@ -15,9 +15,7 @@
 
     <main class="welcome-container" id="profile-selection">
         <div class="card" onclick="selectProfile('homme')">
-            <div class="card-image homme-anim">
-                <div class="avatar-glow"></div>
-            </div>
+            <div class="card-image homme-anim"></div>
             <div class="card-content">
                 <h2>HOMME</h2>
                 <p>Puissance & Définition</p>
@@ -25,9 +23,7 @@
         </div>
 
         <div class="card" onclick="selectProfile('femme')">
-            <div class="card-image femme-anim">
-                <div class="avatar-glow"></div>
-            </div>
+            <div class="card-image femme-anim"></div>
             <div class="card-content">
                 <h2>FEMME</h2>
                 <p>Silhouette Tonique & Galbée</p>
@@ -35,9 +31,7 @@
         </div>
 
         <div class="card" onclick="selectProfile('senior')">
-            <div class="card-image senior-anim">
-                <div class="avatar-glow"></div>
-            </div>
+            <div class="card-image senior-anim"></div>
             <div class="card-content">
                 <h2>SENIOR</h2>
                 <p>Vitalité & Mobilité</p>
@@ -47,15 +41,17 @@
 
     <section id="duration-selection" class="hidden">
         <button class="back-btn" onclick="resetToHome()">⬅ Retour</button>
-        <h2>Choisissez votre durée</h2>
+        <h2>Choisissez la durée de votre séance</h2>
         <div class="duration-buttons">
             <button onclick="selectDuration(5)">5 Minutes</button>
             <button onclick="selectDuration(10)">10 Minutes</button>
             <button onclick="selectDuration(15)">15 Minutes</button>
         </div>
         
-        <h3>Aperçu du programme :</h3>
-        <div id="exercises-preview-list" class="preview-grid"></div>
+        <div class="preview-section">
+            <h3>Aperçu de votre séance</h3>
+            <div id="exercises-preview-list" class="preview-grid"></div>
+        </div>
     </section>
 
     <section id="workout-session" class="hidden">
@@ -64,20 +60,20 @@
         <h2 id="current-exercise-name">Exercice</h2>
         
         <div class="exercise-animation-container">
-            <div id="exercise-visual" class="animation-placeholder">
-                </div>
+            <div id="exercise-visual" class="animation-placeholder"></div>
         </div>
 
         <div class="timers-container">
             <div class="timer-box">
                 <span class="timer-label">Exercice en cours</span>
-                <div id="exercise-timer" class="timer-display">00:30</div>
+                <div id="exercise-timer" class="timer-display">00:00</div>
             </div>
             <div class="timer-box-total">
                 <span class="timer-label">Temps total restant</span>
-                <div id="total-timer" class="timer-display-total">05:00</div>
+                <div id="total-timer" class="timer-display-total">00:00</div>
             </div>
         </div>
+        
         <button id="start-btn" onclick="startWorkout()">DÉBUTER</button>
     </section>
 
