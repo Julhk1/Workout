@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fitness Belt</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="top">
+    <h1 id="title">🥋 Fitness Belt</h1>
+
+    <div class="lang">
+      <button onclick="setLang('fr')">FR</button>
+      <button onclick="setLang('en')">EN</button>
+      <button onclick="setLang('ar')">AR</button>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <h2 id="belt">🟡 CEINTURE JAUNE</h2>
+
+    <div class="bar">
+      <div id="progress"></div>
+    </div>
+
+    <p id="stats"></p>
+
+  </div>
+
+  <div class="workouts">
+
+    <button onclick="workout(5)">5 MIN</button>
+    <button onclick="workout(10)">10 MIN</button>
+    <button onclick="workout(15)">15 MIN</button>
+
+  </div>
+
+  <button class="done" onclick="finishWorkout()">✔ DONE</button>
+
+  <button onclick="generateCard()">📱 GENERATE CARD</button>
+  <button onclick="downloadCard()">DOWNLOAD</button>
+
+  <canvas id="card" width="1080" height="1080"></canvas>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
