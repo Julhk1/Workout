@@ -1,14 +1,140 @@
+:root {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --accent-color: #ff4757;
+    --text-color: #ffffff;
+    --text-secondary: #a4b0be;
+}
+
+/* Réinitialisation de base pour forcer le thème sombre */
+html, body {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+}
+
+header {
+    padding: 40px 20px;
+}
+
+header h1 {
+    font-size: 3rem;
+    margin: 0;
+    letter-spacing: 2px;
+    color: white;
+}
+
+header h1 span {
+    color: var(--accent-color);
+}
+
+header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* Grille des profils d'accueil */
+.welcome-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Style des Cartes */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    width: 300px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(255, 71, 87, 0.3);
+}
+
+/* Fausses animations pour remplacer les photos (Sécurisé juridiquement) */
+.card-image {
+    height: 250px;
+    background-color: #2f3542;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.homme-anim::before { content: "💪🧔"; font-size: 5rem; }
+.femme-anim::before { content: "🧘‍♀️👩"; font-size: 5rem; }
+.senior-anim::before { content: "🏃‍♂️👵"; font-size: 5rem; }
+
+.avatar-glow {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255,71,87,0.2) 0%, rgba(0,0,0,0) 70%);
+    animation: pulse 2s infinite;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-content h2 {
+    margin: 0 0 10px 0;
+    color: white;
+}
+
+/* LA CLASSE CRITIQUE : Cache les sections qui ne doivent pas être vues au début */
+.hidden {
+    display: none !important;
+}
+
 /* Boutons de navigation */
 .back-btn, .quit-btn {
     background: #2f3542;
     color: white;
     border: 1px solid #57606f;
-    padding: 10px 20px;
-    border-radius: 20px;
+    padding: 12px 24px;
+    border-radius: 25px;
     cursor: pointer;
     margin-bottom: 20px;
+    font-weight: bold;
 }
 .quit-btn { background: #ff4757; border: none; }
+
+/* Sélections de durée */
+#duration-selection, #workout-session {
+    margin-top: 30px;
+    padding: 20px;
+}
+
+.duration-buttons button, #start-btn {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 30px;
+    margin: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.duration-buttons button:hover, #start-btn:hover {
+    transform: scale(1.05);
+}
 
 /* Grille d'aperçu des exercices */
 .preview-grid {
@@ -20,19 +146,20 @@
     max-width: 800px;
 }
 .preview-item {
-    background: #1e1e1e;
+    background: var(--card-bg);
     padding: 15px;
     border-radius: 10px;
     border-left: 4px solid var(--accent-color);
     min-width: 150px;
+    color: white;
 }
 
-/* Zone d'animation stylisée (sans visage) */
+/* Zone d'animation stylisée */
 .exercise-animation-container {
     width: 200px;
     height: 200px;
     margin: 20px auto;
-    background: #1e1e1e;
+    background: var(--card-bg);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -41,7 +168,6 @@
     box-shadow: 0 0 20px rgba(255, 71, 87, 0.3);
 }
 
-/* Exemple d'animation purement CSS simulant le mouvement */
 .animation-placeholder {
     width: 60px;
     height: 60px;
@@ -49,22 +175,17 @@
     border-radius: 50%;
 }
 
-/* Animation de pompe : le cercle descend et monte */
-.pushup-anim {
-    animation: pushup 2s infinite ease-in-out;
-    background: #1e90ff;
-}
+/* Animations CSS */
+.pushup-anim { animation: pushup 2s infinite ease-in-out; background: #1e90ff; }
+.squat-anim { animation: pushup 1.5s infinite ease-in-out; background: #2ed573; }
+.plank-anim { animation: pulse 2s infinite; background: #7158e2; }
+
 @keyframes pushup {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(0.6) translateY(20px); }
+    50% { transform: scale(0.7) translateY(15px); }
 }
 
-/* Animation de repos : battement doux */
-.rest-anim {
-    animation: pulse 1.5s infinite;
-    background: #ffb142;
-}
 @keyframes pulse {
-    0% { transform: scale(0.9); opacity: 0.6; }
+    0% { transform: scale(0.9); opacity: 0.7; }
     50% { transform: scale(1.1); opacity: 1; }
 }
