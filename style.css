@@ -1,140 +1,70 @@
-:root {
-    --bg-color: #121212;
-    --card-bg: #1e1e1e;
-    --accent-color: #ff4757;
-    --text-color: #ffffff;
-    --text-secondary: #a4b0be;
-}
-
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    text-align: center;
-}
-
-header {
-    padding: 40px 20px;
-}
-
-header h1 {
-    font-size: 3rem;
-    margin: 0;
-    letter-spacing: 2px;
-}
-
-header h1 span {
-    color: var(--accent-color);
-}
-
-header p {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
-}
-
-/* Grille des profils */
-.welcome-container {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Style des Cartes */
-.card {
-    background-color: var(--card-bg);
-    border-radius: 15px;
-    overflow: hidden;
-    width: 300px;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-}
-
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(255, 71, 87, 0.2);
-}
-
-.card-image {
-    height: 350px;
-    background-size: cover;
-    background-position: center;
-    transition: transform 0.5s ease;
-}
-
-.card:hover .card-image {
-    transform: scale(1.05);
-}
-
-.card-content {
-    padding: 20px;
-}
-
-.card-content h2 {
-    margin: 0 0 10px 0;
-    letter-spacing: 1px;
-}
-
-/* Classes Utilitaires */
-.hidden {
-    display: none !important;
-}
-
-/* Sections de transition */
-#duration-selection, #workout-session {
-    margin-top: 50px;
-    padding: 40px;
-    animation: fadeIn 0.5s ease forwards;
-}
-
-.duration-buttons button, #start-btn {
-    background-color: var(--accent-color);
+/* Boutons de navigation */
+.back-btn, .quit-btn {
+    background: #2f3542;
     color: white;
-    border: none;
-    padding: 15px 40px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border-radius: 30px;
-    margin: 10px;
+    border: 1px solid #57606f;
+    padding: 10px 20px;
+    border-radius: 20px;
     cursor: pointer;
-    transition: transform 0.2s;
+    margin-bottom: 20px;
 }
+.quit-btn { background: #ff4757; border: none; }
 
-.duration-buttons button:hover, #start-btn:hover {
-    transform: scale(1.05);
-}
-
-/* Chronomètres */
-.timers-container {
+/* Grille d'aperçu des exercices */
+.preview-grid {
     display: flex;
     justify-content: center;
-    gap: 50px;
-    margin: 30px 0;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 30px auto;
+    max-width: 800px;
+}
+.preview-item {
+    background: #1e1e1e;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid var(--accent-color);
+    min-width: 150px;
 }
 
-.timer-box {
-    font-size: 3rem;
-    font-weight: bold;
+/* Zone d'animation stylisée (sans visage) */
+.exercise-animation-container {
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+    background: #1e1e1e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--accent-color);
+    box-shadow: 0 0 20px rgba(255, 71, 87, 0.3);
 }
 
-.timer-box-total {
-    font-size: 2rem;
-    color: var(--text-secondary);
+/* Exemple d'animation purement CSS simulant le mouvement */
+.animation-placeholder {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 50%;
 }
 
-.timer-label {
-    display: block;
-    font-size: 1rem;
-    text-transform: uppercase;
-    color: var(--text-secondary);
+/* Animation de pompe : le cercle descend et monte */
+.pushup-anim {
+    animation: pushup 2s infinite ease-in-out;
+    background: #1e90ff;
+}
+@keyframes pushup {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(0.6) translateY(20px); }
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Animation de repos : battement doux */
+.rest-anim {
+    animation: pulse 1.5s infinite;
+    background: #ffb142;
+}
+@keyframes pulse {
+    0% { transform: scale(0.9); opacity: 0.6; }
+    50% { transform: scale(1.1); opacity: 1; }
 }
