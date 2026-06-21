@@ -6,7 +6,7 @@
     --text-secondary: #a4b0be;
 }
 
-/* Réinitialisation de base pour forcer le thème sombre */
+/* Base du site */
 html, body {
     background-color: var(--bg-color) !important;
     color: var(--text-color) !important;
@@ -24,7 +24,6 @@ header h1 {
     font-size: 3rem;
     margin: 0;
     letter-spacing: 2px;
-    color: white;
 }
 
 header h1 span {
@@ -47,7 +46,7 @@ header p {
     margin: 0 auto;
 }
 
-/* Style des Cartes */
+/* Style des Cartes de profil */
 .card {
     background-color: var(--card-bg);
     border-radius: 15px;
@@ -63,27 +62,42 @@ header p {
     box-shadow: 0 15px 30px rgba(255, 71, 87, 0.3);
 }
 
-/* Fausses animations pour remplacer les photos (Sécurisé juridiquement) */
+/* Fonds dégradés rouges sur les cartes (comme ta maquette) */
 .card-image {
-    height: 250px;
-    background-color: #2f3542;
+    height: 280px;
+    background: radial-gradient(circle, #8b1e26 0%, #1a0507 100%);
     position: relative;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background 0.3s;
 }
 
-.homme-anim::before { content: "💪🧔"; font-size: 5rem; }
-.femme-anim::before { content: "🧘‍♀️👩"; font-size: 5rem; }
-.senior-anim::before { content: "🏃‍♂️👵"; font-size: 5rem; }
+/* Icônes de profil sans visage */
+.homme-anim {
+    background-image: url('https://cdn-icons-png.flaticon.com/512/2548/2548537.png');
+    background-size: 65%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 
-.avatar-glow {
-    position: absolute;
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle, rgba(255,71,87,0.2) 0%, rgba(0,0,0,0) 70%);
-    animation: pulse 2s infinite;
+.femme-anim {
+    background-image: url('https://cdn-icons-png.flaticon.com/512/2548/2548532.png');
+    background-size: 65%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.senior-anim {
+    background-image: url('https://cdn-icons-png.flaticon.com/512/3048/3048374.png');
+    background-size: 65%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.card:hover .card-image {
+    background: radial-gradient(circle, #b32631 0%, #1a0507 100%);
 }
 
 .card-content {
@@ -92,15 +106,14 @@ header p {
 
 .card-content h2 {
     margin: 0 0 10px 0;
-    color: white;
+    letter-spacing: 1px;
 }
 
-/* LA CLASSE CRITIQUE : Cache les sections qui ne doivent pas être vues au début */
+/* Navigation et Boutons */
 .hidden {
     display: none !important;
 }
 
-/* Boutons de navigation */
 .back-btn, .quit-btn {
     background: #2f3542;
     color: white;
@@ -112,12 +125,6 @@ header p {
     font-weight: bold;
 }
 .quit-btn { background: #ff4757; border: none; }
-
-/* Sélections de durée */
-#duration-selection, #workout-session {
-    margin-top: 30px;
-    padding: 20px;
-}
 
 .duration-buttons button, #start-btn {
     background-color: var(--accent-color);
@@ -136,28 +143,66 @@ header p {
     transform: scale(1.05);
 }
 
-/* Grille d'aperçu des exercices */
+/* La section d'aperçu des exercices du bas */
+.preview-section {
+    margin-top: 40px;
+    border-top: 1px solid #2f3542;
+    padding-top: 20px;
+}
+
 .preview-grid {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 20px;
     flex-wrap: wrap;
     margin: 30px auto;
-    max-width: 800px;
+    max-width: 900px;
 }
+
 .preview-item {
     background: var(--card-bg);
     padding: 15px;
-    border-radius: 10px;
-    border-left: 4px solid var(--accent-color);
-    min-width: 150px;
-    color: white;
+    border-radius: 12px;
+    width: 120px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* Zone d'animation stylisée */
+.preview-icon {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    filter: invert(1); /* Rend l'icône blanche */
+    margin-bottom: 10px;
+}
+
+.preview-info strong {
+    display: block;
+    font-size: 0.85rem;
+    color: #ffffff;
+}
+
+.preview-info span {
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+/* Chronomètres et animations d'entraînement */
+.timers-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin: 30px 0;
+}
+
+.timer-box { font-size: 3rem; font-weight: bold; }
+.timer-box-total { font-size: 2rem; color: var(--text-secondary); }
+.timer-label { display: block; font-size: 1rem; text-transform: uppercase; color: var(--text-secondary); }
+
 .exercise-animation-container {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
     margin: 20px auto;
     background: var(--card-bg);
     border-radius: 50%;
@@ -175,17 +220,18 @@ header p {
     border-radius: 50%;
 }
 
-/* Animations CSS */
-.pushup-anim { animation: pushup 2s infinite ease-in-out; background: #1e90ff; }
-.squat-anim { animation: pushup 1.5s infinite ease-in-out; background: #2ed573; }
-.plank-anim { animation: pulse 2s infinite; background: #7158e2; }
+/* Logique des animations CSS */
+.pushup-anim { animation: moveUpAndDown 1.8s infinite ease-in-out; background: #1e90ff; }
+.squat-anim { animation: moveUpAndDown 1.4s infinite ease-in-out; background: #2ed573; }
+.plank-anim { animation: pulseGlow 2s infinite; background: #7158e2; }
+.rest-anim { animation: pulseGlow 1.2s infinite; background: #ffb142; }
 
-@keyframes pushup {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(0.7) translateY(15px); }
+@keyframes moveUpAndDown {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(20px) scale(0.8); }
 }
 
-@keyframes pulse {
-    0% { transform: scale(0.9); opacity: 0.7; }
+@keyframes pulseGlow {
+    0% { transform: scale(0.9); opacity: 0.6; }
     50% { transform: scale(1.1); opacity: 1; }
 }
