@@ -1,119 +1,116 @@
-let profile = localStorage.getItem("profile");
+// Liste précise des exercices avec leur durée d'effort et de repos (en secondes)
+const workoutDatabase = {
+    homme: [
+        { name: "💪 Pompes classiques", work: 40, rest: 20 },
+        { name: "🏋️ Squats Jump (Explosif)", work: 45, rest: 15 },
+        { name: "🔥 Burpees", work: 30, rest: 30 },
+        { name: "🛡️ Gainage Abdominal", work: 50, rest: 10 },
+        { name: "🦅 Mountain Climbers", work: 40, rest: 20 },
+        { name: "Leg Raises (Abdos du bas)", work: 45, rest: 15 }
+    ],
+    femme: [
+        { name: "🍑 Squats Sumo (Fessiers)", work: 45, rest: 15 },
+        { name: "🏃‍♀️ Fentes alternées sautées", work: 35, rest: 25 },
+        { name: "🛡️ Gainage Commando", work: 40, rest: 20 },
+        { name: "✨ Glute Bridges (Pont fessier)", work: 50, rest: 10 },
+        { name: "🔥 Jumping Jacks", work: 40, rest: 20 },
+        { name: "Abdos bicyclette", work: 45, rest: 15 }
+    ],
+    senior: [
+        { name: "🚶‍♂️ Marche active sur place", work: 30, rest: 30 },
+        { name: "🪑 Squat assisté avec chaise", work: 35, rest: 25 },
+        { name: "🧘‍♂️ Étirement du chat (Dos)", work: 40, rest: 20 },
+        { name: "⚖️ Équilibre sur une jambe", work: 30, rest: 30 },
+        { name: "🔄 Rotations douces des bras", work: 40, rest: 20 },
+        { name: "Talons-fesses en douceur", work: 35, rest: 25 }
+    ]
+};
 
-function selectProfile(p) {
-  profile = p;
-  localStorage.setItem("profile", p);
-  window.location.href = "workout.html";
+let selectedProfile = '';
+let selectedDuration = 0; // En minutes
+let currentExerciseIndex = 0;
+let totalSecondsRemaining = 0;
+let currentPhase = 'work'; // 'work' (effort) ou 'rest' (repos)
+let phaseSecondsRemaining = 0;
+let workoutInterval;
+
+function selectProfile(profile) {
+    selectedProfile = profile;
+    document.querySelector('.welcome-container').classList.add('hidden');
+    document.getElementById('duration-selection').classList.remove('hidden');
 }
 
-/* ------------------ WORKOUT ------------------ */
-
-let exercises = [];
-let current = 0;
-let globalTime = 0;
-let exerciseTime = 0;
-let interval;
-
-function startWorkout(min) {
-
-  document.querySelector(".buttons").style.display = "none";
-  document.getElementById("workoutBox").style.display = "block";
-
-  globalTime = min * 60;
-
-  if (profile === "male") {
-    exercises = [
-      { name: "Squats", time: 30 },
-      { name: "Push-ups", time: 30 },
-      { name: "Plank", time: 30 },
-      { name: "Jumping Jacks", time: 30 }
-    ];
-  }
-
-  if (profile === "female") {
-    exercises = [
-      { name: "Squats", time: 30 },
-      { name: "Glute Bridge", time: 30 },
-      { name: "Abs Crunch", time: 30 },
-      { name: "Stretching", time: 30 }
-    ];
-  }
-
-  if (profile === "senior") {
-    exercises = [
-      { name: "Walking in place", time: 40 },
-      { name: "Arm circles", time: 40 },
-      { name: "Gentle squats", time: 40 }
-    ];
-  }
-
-  current = 0;
-  runTimers();
+function selectDuration(minutes) {
+    selectedDuration = minutes;
+    totalSecondsRemaining = minutes * 60;
+    
+    updateTotalTimerDisplay();
+    
+    document.getElementById('duration-selection').classList.add('hidden');
+    document.getElementById('workout-session').classList.remove('hidden');
+    
+    // On prépare le premier exercice
+    currentExerciseIndex = 0;
+    currentPhase = 'work';
+    let firstExercise = workoutDatabase[selectedProfile][currentExerciseIndex];
+    phaseSecondsRemaining = firstExercise.work;
+    
+    document.getElementById('current-exercise-name').innerText = firstExercise.name;
+    document.getElementById('exercise-timer').innerText = formatTime(phaseSecondsRemaining);
 }
 
-function runTimers() {
-
-  clearInterval(interval);
-
-  interval = setInterval(() => {
-
-    globalTime--;
-    exerciseTime--;
-
-    if (exerciseTime <= 0) {
-      nextExercise();
-    }
-
-    if (globalTime <= 0) {
-      finishWorkout();
-    }
-
-    updateUI();
-
-  }, 1000);
-
-  loadExercise();
+function startWorkout() {
+    document.getElementById('start-btn').classList.add('hidden');
+    
+    workoutInterval = setInterval(() => {
+        // 1. Décompte du temps total
+        totalSecondsRemaining--;
+        updateTotalTimerDisplay();
+        
+        // Si le temps total est écoulé, on arrête tout
+        if (totalSecondsRemaining <= 0) {
+            clearInterval(workoutInterval);
+            document.getElementById('current-exercise-name').innerText = "🎉 Félicitations ! Séance terminée ! 🥂";
+            document.getElementById('exercise-timer').innerText = "00:00";
+            document.getElementById('exercise-timer').style.color = "#4cd137"; // Vert pour la victoire
+            return;
+        }
+        
+        // 2. Décompte de la phase actuelle (Effort ou Repos)
+        phaseSecondsRemaining--;
+        document.getElementById('exercise-timer').innerText = formatTime(phaseSecondsRemaining);
+        
+        // Gestion du changement de phase (Effort <-> Repos)
+        if (phaseSecondsRemaining <= 0) {
+            let currentExercise = workoutDatabase[selectedProfile][currentExerciseIndex];
+            
+            if (currentPhase === 'work') {
+                // On passe au repos
+                currentPhase = 'rest';
+                phaseSecondsRemaining = currentExercise.rest;
+                document.getElementById('current-exercise-name').innerText = "⏳ RÉCUPÉRATION REPOS";
+                document.getElementById('exercise-timer').style.color = "#ffb142"; // Orange pour le repos
+            } else {
+                // Le repos est fini, on passe à l'exercice suivant
+                currentPhase = 'work';
+                currentExerciseIndex = (currentExerciseIndex + 1) % workoutDatabase[selectedProfile].length; // Boucle sur la liste
+                let nextExercise = workoutDatabase[selectedProfile][currentExerciseIndex];
+                
+                phaseSecondsRemaining = nextExercise.work;
+                document.getElementById('current-exercise-name').innerText = nextExercise.name;
+                document.getElementById('exercise-timer').style.color = "#ffffff"; // Blanc/Rouge pour l'effort
+            }
+        }
+        
+    }, 1000);
 }
 
-function loadExercise() {
-  if (!exercises[current]) return;
-
-  document.getElementById("exerciseName").innerText =
-    "🏋️ " + exercises[current].name;
-
-  exerciseTime = exercises[current].time;
+function formatTime(seconds) {
+    let mins = Math.floor(seconds / 60);
+    let secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
-function nextExercise() {
-  current++;
-
-  if (current >= exercises.length) {
-    finishWorkout();
-    return;
-  }
-
-  loadExercise();
-}
-
-function updateUI() {
-  document.getElementById("globalTimer").innerText =
-    format(globalTime);
-
-  document.getElementById("exerciseTimer").innerText =
-    format(exerciseTime);
-}
-
-function format(s) {
-  let m = Math.floor(s / 60);
-  let sec = s % 60;
-  return `${m}:${sec < 10 ? "0" : ""}${sec}`;
-}
-
-function finishWorkout() {
-  clearInterval(interval);
-
-  document.getElementById("workoutBox").style.display = "none";
-  document.getElementById("finish").style.display = "block";
-
-  localStorage.setItem("lastWorkout", Date.now());
+function updateTotalTimerDisplay() {
+    document.getElementById('total-timer').innerText = formatTime(totalSecondsRemaining);
 }
