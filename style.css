@@ -1,58 +1,140 @@
+:root {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --accent-color: #ff4757;
+    --text-color: #ffffff;
+    --text-secondary: #a4b0be;
+}
+
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0a0a0a;
-  color: white;
-  text-align: center;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    text-align: center;
 }
 
-.container {
-  padding: 20px;
+header {
+    padding: 40px 20px;
 }
 
-.subtitle {
-  opacity: 0.6;
+header h1 {
+    font-size: 3rem;
+    margin: 0;
+    letter-spacing: 2px;
 }
 
-.cards {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 30px;
+header h1 span {
+    color: var(--accent-color);
 }
 
+header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* Grille des profils */
+.welcome-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Style des Cartes */
 .card {
-  background: rgba(255,255,255,0.05);
-  padding: 20px;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: 0.2s;
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    width: 300px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
 .card:hover {
-  transform: scale(1.03);
-  background: rgba(255,255,255,0.1);
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(255, 71, 87, 0.2);
 }
 
-button {
-  padding: 12px 18px;
-  margin: 8px;
-  border: none;
-  border-radius: 10px;
-  background: #222;
-  color: white;
-  cursor: pointer;
+.card-image {
+    height: 350px;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease;
 }
 
-button:hover {
-  background: #333;
+.card:hover .card-image {
+    transform: scale(1.05);
 }
 
-.workout {
-  margin-top: 20px;
+.card-content {
+    padding: 20px;
 }
 
-.timers {
-  margin: 20px 0;
-  font-size: 18px;
+.card-content h2 {
+    margin: 0 0 10px 0;
+    letter-spacing: 1px;
+}
+
+/* Classes Utilitaires */
+.hidden {
+    display: none !important;
+}
+
+/* Sections de transition */
+#duration-selection, #workout-session {
+    margin-top: 50px;
+    padding: 40px;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.duration-buttons button, #start-btn {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 30px;
+    margin: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.duration-buttons button:hover, #start-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Chronomètres */
+.timers-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin: 30px 0;
+}
+
+.timer-box {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.timer-box-total {
+    font-size: 2rem;
+    color: var(--text-secondary);
+}
+
+.timer-label {
+    display: block;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
