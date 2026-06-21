@@ -8,22 +8,26 @@
 </head>
 <body>
 
-    <header>
+    <header id="site-header">
         <h1>⚡ FIT<span>TIMER</span></h1>
         <p>Sélectionnez votre profil et commencez votre transformation</p>
     </header>
 
-    <main class="welcome-container">
+    <main class="welcome-container" id="profile-selection">
         <div class="card" onclick="selectProfile('homme')">
-            <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=600&auto=format&fit=crop');"></div>
+            <div class="card-image homme-anim">
+                <div class="avatar-glow"></div>
+            </div>
             <div class="card-content">
                 <h2>HOMME</h2>
-                <p>Puissance & Définition Musculaire</p>
+                <p>Puissance & Définition</p>
             </div>
         </div>
 
         <div class="card" onclick="selectProfile('femme')">
-            <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=600&auto=format&fit=crop');"></div>
+            <div class="card-image femme-anim">
+                <div class="avatar-glow"></div>
+            </div>
             <div class="card-content">
                 <h2>FEMME</h2>
                 <p>Silhouette Tonique & Galbée</p>
@@ -31,32 +35,46 @@
         </div>
 
         <div class="card" onclick="selectProfile('senior')">
-            <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=600&auto=format&fit=crop');"></div>
+            <div class="card-image senior-anim">
+                <div class="avatar-glow"></div>
+            </div>
             <div class="card-content">
                 <h2>SENIOR</h2>
-                <p>Vitalité, Mobilité & Santé</p>
+                <p>Vitalité & Mobilité</p>
             </div>
         </div>
     </main>
 
     <section id="duration-selection" class="hidden">
-        <h2>Choisissez la durée de votre séance</h2>
+        <button class="back-btn" onclick="resetToHome()">⬅ Retour</button>
+        <h2>Choisissez votre durée</h2>
         <div class="duration-buttons">
             <button onclick="selectDuration(5)">5 Minutes</button>
             <button onclick="selectDuration(10)">10 Minutes</button>
             <button onclick="selectDuration(15)">15 Minutes</button>
         </div>
+        
+        <h3>Aperçu du programme :</h3>
+        <div id="exercises-preview-list" class="preview-grid"></div>
     </section>
 
     <section id="workout-session" class="hidden">
+        <button class="quit-btn" onclick="confirmQuit()">✖ Quitter l'entraînement</button>
+        
         <h2 id="current-exercise-name">Exercice</h2>
+        
+        <div class="exercise-animation-container">
+            <div id="exercise-visual" class="animation-placeholder">
+                </div>
+        </div>
+
         <div class="timers-container">
             <div class="timer-box">
-                <span class="timer-label">Exercice</span>
+                <span class="timer-label">Exercice en cours</span>
                 <div id="exercise-timer" class="timer-display">00:30</div>
             </div>
             <div class="timer-box-total">
-                <span class="timer-label">Temps Total Restant</span>
+                <span class="timer-label">Temps total restant</span>
                 <div id="total-timer" class="timer-display-total">05:00</div>
             </div>
         </div>
