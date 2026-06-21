@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fitness Belt</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitness Belt</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
-  <div class="top">
-    <h1 id="title">🥋 Fitness Belt</h1>
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <h1>Fitness Belt</h1>
+      <p id="subtitle">Discipline > Motivation</p>
+    </div>
 
     <div class="lang">
       <button onclick="setLang('fr')">FR</button>
@@ -21,30 +25,42 @@
     </div>
   </div>
 
-  <div class="card">
+  <!-- BELT CARD -->
+  <div class="belt-card">
 
-    <h2 id="belt">🟡 CEINTURE JAUNE</h2>
+    <div class="belt-title" id="belt">
+      🟡 YELLOW BELT
+    </div>
 
-    <div class="bar">
+    <div class="progress-bar">
       <div id="progress"></div>
     </div>
 
-    <p id="stats"></p>
+    <div class="stats" id="stats">
+      0 workouts • 0 min • 0 streak
+    </div>
 
   </div>
 
-  <div class="workouts">
+  <!-- WORKOUT SELECT -->
+  <div class="section-title">Quick Workout</div>
 
-    <button onclick="workout(5)">5 MIN</button>
-    <button onclick="workout(10)">10 MIN</button>
-    <button onclick="workout(15)">15 MIN</button>
-
+  <div class="grid">
+    <button onclick="workout(5)">5 min</button>
+    <button onclick="workout(10)">10 min</button>
+    <button onclick="workout(15)">15 min</button>
   </div>
 
-  <button class="done" onclick="finishWorkout()">✔ DONE</button>
+  <!-- ACTION -->
+  <button class="primary" onclick="finishWorkout()">
+    ✔ Complete Session
+  </button>
 
-  <button onclick="generateCard()">📱 GENERATE CARD</button>
-  <button onclick="downloadCard()">DOWNLOAD</button>
+  <!-- SHARE -->
+  <div class="share">
+    <button onclick="generateCard()">Generate Card</button>
+    <button onclick="downloadCard()">Share</button>
+  </div>
 
   <canvas id="card" width="1080" height="1080"></canvas>
 
