@@ -1,61 +1,77 @@
-// Liste précise des exercices avec leur durée d'effort et de repos (en secondes)
 const workoutDatabase = {
     homme: [
-        { name: "💪 Pompes classiques", work: 40, rest: 20 },
-        { name: "🏋️ Squats Jump (Explosif)", work: 45, rest: 15 },
-        { name: "🔥 Burpees", work: 30, rest: 30 },
-        { name: "🛡️ Gainage Abdominal", work: 50, rest: 10 },
-        { name: "🦅 Mountain Climbers", work: 40, rest: 20 },
-        { name: "Leg Raises (Abdos du bas)", work: 45, rest: 15 }
+        { name: "💪 Pompes classiques", work: 40, rest: 20, animClass: "pushup-anim" },
+        { name: "🏋️ Squats Jump", work: 45, rest: 15, animClass: "squat-anim" },
+        { name: "🔥 Burpees", work: 30, rest: 30, animClass: "burpee-anim" },
+        { name: "🛡️ Gainage Abdominal", work: 50, rest: 10, animClass: "plank-anim" }
     ],
     femme: [
-        { name: "🍑 Squats Sumo (Fessiers)", work: 45, rest: 15 },
-        { name: "🏃‍♀️ Fentes alternées sautées", work: 35, rest: 25 },
-        { name: "🛡️ Gainage Commando", work: 40, rest: 20 },
-        { name: "✨ Glute Bridges (Pont fessier)", work: 50, rest: 10 },
-        { name: "🔥 Jumping Jacks", work: 40, rest: 20 },
-        { name: "Abdos bicyclette", work: 45, rest: 15 }
+        { name: "🍑 Squats Sumo", work: 45, rest: 15, animClass: "squat-anim" },
+        { name: "🏃‍♀️ Fentes sautées", work: 35, rest: 25, animClass: "lunge-anim" },
+        { name: "🛡️ Gainage Commando", work: 40, rest: 20, animClass: "plank-anim" },
+        { name: "✨ Glute Bridges", work: 50, rest: 10, animClass: "bridge-anim" }
     ],
     senior: [
-        { name: "🚶‍♂️ Marche active sur place", work: 30, rest: 30 },
-        { name: "🪑 Squat assisté avec chaise", work: 35, rest: 25 },
-        { name: "🧘‍♂️ Étirement du chat (Dos)", work: 40, rest: 20 },
-        { name: "⚖️ Équilibre sur une jambe", work: 30, rest: 30 },
-        { name: "🔄 Rotations douces des bras", work: 40, rest: 20 },
-        { name: "Talons-fesses en douceur", work: 35, rest: 25 }
+        { name: "🚶‍♂️ Marche active", work: 30, rest: 30, animClass: "walk-anim" },
+        { name: "🪑 Squat sur chaise", work: 35, rest: 25, animClass: "chair-anim" },
+        { name: "🧘‍♂️ Étirement du dos", work: 40, rest: 20, animClass: "stretch-anim" },
+        { name: "⚖️ Équilibre", work: 30, rest: 30, animClass: "balance-anim" }
     ]
 };
 
 let selectedProfile = '';
-let selectedDuration = 0; // En minutes
+let selectedDuration = 0;
 let currentExerciseIndex = 0;
 let totalSecondsRemaining = 0;
-let currentPhase = 'work'; // 'work' (effort) ou 'rest' (repos)
+let currentPhase = 'work';
 let phaseSecondsRemaining = 0;
 let workoutInterval;
 
 function selectProfile(profile) {
     selectedProfile = profile;
-    document.querySelector('.welcome-container').classList.add('hidden');
+    document.getElementById('profile-selection').classList.add('hidden');
     document.getElementById('duration-selection').classList.remove('hidden');
+    
+    // Générer l'aperçu de la liste des exercices
+    const previewContainer = document.getElementById('exercises-preview-list');
+    previewContainer.innerHTML = '';
+    workoutDatabase[selectedProfile].forEach(ex => {
+        let item = document.createElement('div');
+        item.className = 'preview-item';
+        item.innerHTML = `<strong>${ex.name}</strong><br><small>Effort: ${ex.work}s | Repos: ${ex.rest}s</small>`;
+        previewContainer.appendChild(item);
+    });
 }
 
 function selectDuration(minutes) {
     selectedDuration = minutes;
     totalSecondsRemaining = minutes * 60;
-    
     updateTotalTimerDisplay();
     
     document.getElementById('duration-selection').classList.add('hidden');
     document.getElementById('workout-session').classList.remove('hidden');
+    document.getElementById('site-header').classList.add('hidden'); // Cache le gros titre pour faire de la place
     
-    // On prépare le premier exercice
     currentExerciseIndex = 0;
     currentPhase = 'work';
-    let firstExercise = workoutDatabase[selectedProfile][currentExerciseIndex];
-    phaseSecondsRemaining = firstExercise.work;
-    
-    document.getElementById('current-exercise-name').innerText = firstExercise.name;
+    loadExercise();
+}
+
+function loadExercise() {
+    let exercise = workoutDatabase[selectedProfile][currentExerciseIndex];
+    if (currentPhase === 'work') {
+        document.getElementById('current-exercise-name').innerText = exercise.name;
+        phaseSecondsRemaining = exercise.work;
+        document.getElementById('exercise-timer').style.color = "#ffffff";
+        
+        // Appliquer l'animation correspondante (bras/jambes qui bougent via CSS)
+        document.getElementById('exercise-visual').className = `animation-placeholder ${exercise.animClass}`;
+    } else {
+        document.getElementById('current-exercise-name').innerText = "⏳ RÉCUPÉRATION REPOS";
+        phaseSecondsRemaining = exercise.rest;
+        document.getElementById('exercise-timer').style.color = "#ffb142";
+        document.getElementById('exercise-visual').className = "animation-placeholder rest-anim";
+    }
     document.getElementById('exercise-timer').innerText = formatTime(phaseSecondsRemaining);
 }
 
@@ -63,46 +79,50 @@ function startWorkout() {
     document.getElementById('start-btn').classList.add('hidden');
     
     workoutInterval = setInterval(() => {
-        // 1. Décompte du temps total
         totalSecondsRemaining--;
         updateTotalTimerDisplay();
         
-        // Si le temps total est écoulé, on arrête tout
         if (totalSecondsRemaining <= 0) {
             clearInterval(workoutInterval);
-            document.getElementById('current-exercise-name').innerText = "🎉 Félicitations ! Séance terminée ! 🥂";
+            document.getElementById('current-exercise-name').innerText = "🎉 Séance terminée ! Bravo !";
             document.getElementById('exercise-timer').innerText = "00:00";
-            document.getElementById('exercise-timer').style.color = "#4cd137"; // Vert pour la victoire
+            document.getElementById('exercise-visual').className = "animation-placeholder victory-anim";
             return;
         }
         
-        // 2. Décompte de la phase actuelle (Effort ou Repos)
         phaseSecondsRemaining--;
         document.getElementById('exercise-timer').innerText = formatTime(phaseSecondsRemaining);
         
-        // Gestion du changement de phase (Effort <-> Repos)
         if (phaseSecondsRemaining <= 0) {
-            let currentExercise = workoutDatabase[selectedProfile][currentExerciseIndex];
-            
             if (currentPhase === 'work') {
-                // On passe au repos
                 currentPhase = 'rest';
-                phaseSecondsRemaining = currentExercise.rest;
-                document.getElementById('current-exercise-name').innerText = "⏳ RÉCUPÉRATION REPOS";
-                document.getElementById('exercise-timer').style.color = "#ffb142"; // Orange pour le repos
             } else {
-                // Le repos est fini, on passe à l'exercice suivant
                 currentPhase = 'work';
-                currentExerciseIndex = (currentExerciseIndex + 1) % workoutDatabase[selectedProfile].length; // Boucle sur la liste
-                let nextExercise = workoutDatabase[selectedProfile][currentExerciseIndex];
-                
-                phaseSecondsRemaining = nextExercise.work;
-                document.getElementById('current-exercise-name').innerText = nextExercise.name;
-                document.getElementById('exercise-timer').style.color = "#ffffff"; // Blanc/Rouge pour l'effort
+                currentExerciseIndex = (currentExerciseIndex + 1) % workoutDatabase[selectedProfile].length;
             }
+            loadExercise();
         }
-        
     }, 1000);
+}
+
+function confirmQuit() {
+    if (confirm("Voulez-vous vraiment arrêter l'entraînement et revenir à l'accueil ?")) {
+        clearInterval(workoutInterval);
+        resetToHome();
+    }
+}
+
+function resetToHome() {
+    clearInterval(workoutInterval);
+    selectedProfile = '';
+    selectedDuration = 0;
+    currentExerciseIndex = 0;
+    
+    document.getElementById('workout-session').classList.add('hidden');
+    document.getElementById('duration-selection').classList.add('hidden');
+    document.getElementById('profile-selection').classList.remove('hidden');
+    document.getElementById('site-header').classList.remove('hidden');
+    document.getElementById('start-btn').classList.remove('hidden');
 }
 
 function formatTime(seconds) {
