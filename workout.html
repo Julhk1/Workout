@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Workout</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1 id="title">Workout</h1>
+
+  <p class="subtitle" id="profileText"></p>
+
+  <div class="buttons">
+    <button onclick="startWorkout(5)">5 MIN</button>
+    <button onclick="startWorkout(10)">10 MIN</button>
+    <button onclick="startWorkout(15)">15 MIN</button>
+  </div>
+
+  <div class="workout" id="workoutBox" style="display:none;">
+
+    <h2 id="exerciseName">Ready</h2>
+
+    <div class="timers">
+      <p>⏱ Global: <span id="globalTimer"></span></p>
+      <p>⏳ Exercice: <span id="exerciseTimer"></span></p>
+    </div>
+
+    <button onclick="nextExercise()">Next</button>
+
+  </div>
+
+  <div id="finish" style="display:none;">
+    <h2>🎉 Bravo !</h2>
+    <p>Workout terminé</p>
+    <button onclick="location.reload()">Recommencer</button>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
