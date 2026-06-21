@@ -1,21 +1,21 @@
 const workoutDatabase = {
     homme: [
-        { name: "💪 Pompes classiques", work: 40, rest: 20, animClass: "pushup-anim" },
-        { name: "🏋️ Squats Jump", work: 45, rest: 15, animClass: "squat-anim" },
-        { name: "🔥 Burpees", work: 30, rest: 30, animClass: "burpee-anim" },
-        { name: "🛡️ Gainage Abdominal", work: 50, rest: 10, animClass: "plank-anim" }
+        { name: "💪 Pompes", work: 40, rest: 20, img: "https://cdn-icons-png.flaticon.com/512/2548/2548564.png", animClass: "pushup-anim" },
+        { name: "🏋️ Squats Jump", work: 45, rest: 15, img: "https://cdn-icons-png.flaticon.com/512/2548/2548537.png", animClass: "squat-anim" },
+        { name: "🔥 Burpees", work: 30, rest: 30, img: "https://cdn-icons-png.flaticon.com/512/2548/2548531.png", animClass: "burpee-anim" },
+        { name: "🛡️ Gainage", work: 50, rest: 10, img: "https://cdn-icons-png.flaticon.com/512/2548/2548486.png", animClass: "plank-anim" }
     ],
     femme: [
-        { name: "🍑 Squats Sumo", work: 45, rest: 15, animClass: "squat-anim" },
-        { name: "🏃‍♀️ Fentes sautées", work: 35, rest: 25, animClass: "lunge-anim" },
-        { name: "🛡️ Gainage Commando", work: 40, rest: 20, animClass: "plank-anim" },
-        { name: "✨ Glute Bridges", work: 50, rest: 10, animClass: "bridge-anim" }
+        { name: "🍑 Squats Sumo", work: 45, rest: 15, img: "https://cdn-icons-png.flaticon.com/512/2548/2548532.png", animClass: "squat-anim" },
+        { name: "🏃‍♀️ Fentes", work: 35, rest: 25, img: "https://cdn-icons-png.flaticon.com/512/2548/2548534.png", animClass: "lunge-anim" },
+        { name: "🛡️ Gainage", work: 40, rest: 20, img: "https://cdn-icons-png.flaticon.com/512/2548/2548486.png", animClass: "plank-anim" },
+        { name: "✨ Glute Bridges", work: 50, rest: 10, img: "https://cdn-icons-png.flaticon.com/512/2548/2548512.png", animClass: "bridge-anim" }
     ],
     senior: [
-        { name: "🚶‍♂️ Marche active", work: 30, rest: 30, animClass: "walk-anim" },
-        { name: "🪑 Squat sur chaise", work: 35, rest: 25, animClass: "chair-anim" },
-        { name: "🧘‍♂️ Étirement du dos", work: 40, rest: 20, animClass: "stretch-anim" },
-        { name: "⚖️ Équilibre", work: 30, rest: 30, animClass: "balance-anim" }
+        { name: "🚶‍♂️ Marche active", work: 30, rest: 30, img: "https://cdn-icons-png.flaticon.com/512/3048/3048374.png", animClass: "walk-anim" },
+        { name: "🪑 Squat sur chaise", work: 35, rest: 25, img: "https://cdn-icons-png.flaticon.com/512/2548/2548537.png", animClass: "chair-anim" },
+        { name: "🧘‍♂️ Étirement", work: 40, rest: 20, img: "https://cdn-icons-png.flaticon.com/512/3048/3048398.png", animClass: "stretch-anim" },
+        { name: "⚖️ Équilibre", work: 30, rest: 30, img: "https://cdn-icons-png.flaticon.com/512/2548/2548495.png", animClass: "balance-anim" }
     ]
 };
 
@@ -23,7 +23,7 @@ let selectedProfile = '';
 let selectedDuration = 0;
 let currentExerciseIndex = 0;
 let totalSecondsRemaining = 0;
-let currentPhase = 'work';
+let currentPhase = 'work'; // 'work' ou 'rest'
 let phaseSecondsRemaining = 0;
 let workoutInterval;
 
@@ -32,13 +32,20 @@ function selectProfile(profile) {
     document.getElementById('profile-selection').classList.add('hidden');
     document.getElementById('duration-selection').classList.remove('hidden');
     
-    // Générer l'aperçu de la liste des exercices
+    // Génération automatique des petites cases d'aperçu d'exercices
     const previewContainer = document.getElementById('exercises-preview-list');
     previewContainer.innerHTML = '';
+    
     workoutDatabase[selectedProfile].forEach(ex => {
         let item = document.createElement('div');
         item.className = 'preview-item';
-        item.innerHTML = `<strong>${ex.name}</strong><br><small>Effort: ${ex.work}s | Repos: ${ex.rest}s</small>`;
+        item.innerHTML = `
+            <img src="${ex.img}" alt="${ex.name}" class="preview-icon">
+            <div class="preview-info">
+                <strong>${ex.name}</strong>
+                <span>${ex.work}s / ${ex.rest}s</span>
+            </div>
+        `;
         previewContainer.appendChild(item);
     });
 }
@@ -50,7 +57,7 @@ function selectDuration(minutes) {
     
     document.getElementById('duration-selection').classList.add('hidden');
     document.getElementById('workout-session').classList.remove('hidden');
-    document.getElementById('site-header').classList.add('hidden'); // Cache le gros titre pour faire de la place
+    document.getElementById('site-header').classList.add('hidden');
     
     currentExerciseIndex = 0;
     currentPhase = 'work';
@@ -63,8 +70,6 @@ function loadExercise() {
         document.getElementById('current-exercise-name').innerText = exercise.name;
         phaseSecondsRemaining = exercise.work;
         document.getElementById('exercise-timer').style.color = "#ffffff";
-        
-        // Appliquer l'animation correspondante (bras/jambes qui bougent via CSS)
         document.getElementById('exercise-visual').className = `animation-placeholder ${exercise.animClass}`;
     } else {
         document.getElementById('current-exercise-name').innerText = "⏳ RÉCUPÉRATION REPOS";
@@ -84,9 +89,11 @@ function startWorkout() {
         
         if (totalSecondsRemaining <= 0) {
             clearInterval(workoutInterval);
-            document.getElementById('current-exercise-name').innerText = "🎉 Séance terminée ! Bravo !";
+            document.getElementById('current-exercise-name').innerText = "🎉 Félicitations ! Séance terminée ! 🥂";
             document.getElementById('exercise-timer').innerText = "00:00";
-            document.getElementById('exercise-visual').className = "animation-placeholder victory-anim";
+            document.getElementById('exercise-timer').style.color = "#2ed573";
+            document.getElementById('exercise-visual').className = "animation-placeholder";
+            document.getElementById('exercise-visual').style.background = "#2ed573";
             return;
         }
         
@@ -106,8 +113,7 @@ function startWorkout() {
 }
 
 function confirmQuit() {
-    if (confirm("Voulez-vous vraiment arrêter l'entraînement et revenir à l'accueil ?")) {
-        clearInterval(workoutInterval);
+    if (confirm("Voulez-vous vraiment abandonner l'entraînement et revenir à l'accueil ?")) {
         resetToHome();
     }
 }
